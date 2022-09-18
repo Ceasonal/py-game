@@ -53,9 +53,15 @@ font = pygame.font.Font('freesansbold.ttf', 32)
 textX = 10
 textY = 10
 
+# Game over text
+game_over_font = pygame.font.Font('freesansbold.ttf', 64)
 def scoreboard(x,y):
     score = font.render("Score: "+ str(score_value), True, (255, 255, 255))
     screen.blit(score, (x, y))
+
+def game_over_text():
+    over_text= font.render("GAME OVER", True, (255, 255, 255))
+    screen.blit(over_text, (310, 250))
 def player(x, y):
     screen.blit(playerImg, (x, y))
 def asteroid(x, y, i):
@@ -118,6 +124,14 @@ while running:
     # Asteroid movement
     asteroidX += asteroidX_change
     for i in range(num_of_enemies):
+
+        # Game Over
+        if asteroidY[i] > 450:
+            for j in range(num_of_enemies):
+                asteroidY[j] = 2000
+            game_over_text()
+            break
+
         asteroidX[i] += asteroidX_change[i]
         if asteroidX[i] <= 0:  # create/set boundaries
             asteroidX_change[i] = 4
