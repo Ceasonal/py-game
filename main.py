@@ -23,11 +23,19 @@ playerY = 480
 playerX_change = 0
 
 # Asteroids
-asteroidImg = pygame.image.load("gameimg/asteroid.png")
-asteroidX = random.randint(0, 735)
-asteroidY = random.randint(50, 50)
-asteroidX_change = 4
-asteroidY_change = 40
+asteroidImg = []
+enemyX = []
+asteroidX = []
+asteroidY = []
+asteroidX_change = []
+asteroidY_change = []
+num_of_enemies = 6
+for i in range(num_of_enemies):
+    asteroidImg.append(pygame.image.load("gameimg/asteroid.png"))
+    asteroidX.append(random.randint(0, 735))
+    asteroidY.append(random.randint(50, 50))
+    asteroidX_change.append(4)
+    asteroidY_change.append(40)
 
 # beams
 # Ready - cant see beam on screen
@@ -39,13 +47,19 @@ beamX_change = 0
 beamY_change = 10
 beam_state = "ready"
 
-score = 0
+score_value = 0
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+textX = 10
+textY = 10
+
+def scoreboard(x,y):
+    score = font.render("Score: "+ str(score_value), True, (255, 255, 255))
+    screen.blit(score, (x, y))
 def player(x, y):
     screen.blit(playerImg, (x, y))
-
-
-def astroid(x, y):
-    screen.blit(asteroidImg, (x, y))
+def asteroid(x, y, i):
+    screen.blit(asteroidImg[i], (x, y))
 
 
 def fire_beam(x, y):
@@ -56,7 +70,7 @@ def fire_beam(x, y):
 
 def isCollision(asteroidX, asteroidY, beamX, beamY):
     distance = math.sqrt((math.pow(asteroidX - beamX, 2)) + (math.pow(asteroidY - beamY, 2)))
-    if distance < 27:
+    if distance < 27:  # distance b/w beam and asteroid
         return True
     else:
         False
@@ -101,13 +115,29 @@ while running:
     elif playerX >= 737:  # ship width = 800-63 =737
         playerX = 737
 
-    asteroidX += asteroidX_change  # enemy movement
-    if asteroidX <= 0:  # create/set boundaries
-        asteroidX_change = 4
-        asteroidY += asteroidY_change
-    elif asteroidX >= 736:  # astroid width = 800-64 =736
-        asteroidX_change = -4
-        asteroidY += asteroidY_change
+    # Asteroid movement
+    asteroidX += asteroidX_change
+    for i in range(num_of_enemies):
+        asteroidX[i] += asteroidX_change[i]
+        if asteroidX[i] <= 0:  # create/set boundaries
+            asteroidX_change[i] = 4
+            asteroidY[i] += asteroidY_change[i]
+        elif asteroidX[i] >= 736:  # astroid width = 800-64 =736
+            asteroidX_change[i] = -4
+            asteroidY[i] += asteroidY_change[i]
+
+        # Collision
+        collision = isCollision(asteroidX[i], asteroidY[i], beamX, beamY)
+        if collision:
+            beamY = 480
+            beam_state = "ready"
+            score_value += 1
+            print(score_value)
+            asteroidX[i] = random.randint(0, 735)
+            asteroidY[i] = random.randint(50, 50)
+
+        asteroid(asteroidX[i], asteroidY[i], i)
+
 
     # Beam movement
     if beamY <= 0:
@@ -118,16 +148,7 @@ while running:
         fire_beam(beamX, beamY)
         beamY -= beamY_change
 
-    # collision
-    collision = isCollision(asteroidX,asteroidY,beamX,beamY)
-    if collision:
-        beamY = 480
-        beam_state = "ready"
-        score += 1
-        print(score)
-        asteroidX = random.randint(0,735)
-        asteroidY = random.randint(50, 50)
 
     player(playerX, playerY)
-    astroid(asteroidX, asteroidY)
+    scoreboard(textX,textY)
     pygame.display.update()
