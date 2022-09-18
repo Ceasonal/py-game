@@ -18,6 +18,7 @@ playerX = 370
 playerY = 480
 playerX_change = 0
 
+
 # Asteroids
 asteroidImg = pygame.image.load("gameimg/asteroid.png")
 asteroidX = random.randint(0, 800)
@@ -76,3 +77,5 @@ while running:
     player(playerX, playerY)
     astroid(asteroidX, asteroidY)
     pygame.display.update()
+
+print("hi")
