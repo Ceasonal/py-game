@@ -60,8 +60,8 @@ def scoreboard(x,y):
     screen.blit(score, (x, y))
 
 def game_over_text():
-    over_text= font.render("GAME OVER", True, (255, 255, 255))
-    screen.blit(over_text, (310, 250))
+    over_txt= font.render("GAME OVER", True, (255, 255, 255))
+    screen.blit(over_txt, (310, 250))
 def player(x, y):
     screen.blit(playerImg, (x, y))
 def asteroid(x, y, i):
