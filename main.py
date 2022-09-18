@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 
 # Initialize the pygame
 pygame.init()
@@ -21,14 +22,12 @@ playerX = 370
 playerY = 480
 playerX_change = 0
 
-
 # Asteroids
 asteroidImg = pygame.image.load("gameimg/asteroid.png")
-asteroidX = random.randint(0, 800)
+asteroidX = random.randint(0, 735)
 asteroidY = random.randint(50, 50)
 asteroidX_change = 4
 asteroidY_change = 40
-
 
 # beams
 # Ready - cant see beam on screen
@@ -40,7 +39,7 @@ beamX_change = 0
 beamY_change = 10
 beam_state = "ready"
 
-
+score = 0
 def player(x, y):
     screen.blit(playerImg, (x, y))
 
@@ -48,10 +47,19 @@ def player(x, y):
 def astroid(x, y):
     screen.blit(asteroidImg, (x, y))
 
-def fire_beam(x,y):
+
+def fire_beam(x, y):
     global beam_state
     beam_state = "fire"
     screen.blit(beamImg, (x + 16, y + 10))
+
+
+def isCollision(asteroidX, asteroidY, beamX, beamY):
+    distance = math.sqrt((math.pow(asteroidX - beamX, 2)) + (math.pow(asteroidY - beamY, 2)))
+    if distance < 27:
+        return True
+    else:
+        False
 
 
 # Game Loop
@@ -77,6 +85,10 @@ while running:
                 playerX_change = 5
                 # print("Right arrow is pressed")
             if event.key == pygame.K_SPACE:
+                if beam_state == "ready":
+                    beamX = playerX
+                    fire_beam(beamX, beamY)
+
                 fire_beam(playerX, beamY)
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -98,11 +110,24 @@ while running:
         asteroidY += asteroidY_change
 
     # Beam movement
-    if beam_state is "fire":
-        fire_beam(playerX, beamY)
+    if beamY <= 0:
+        beamY = 480
+        beam_state = "ready"
+
+    if beam_state == "fire":
+        fire_beam(beamX, beamY)
         beamY -= beamY_change
+
+    # collision
+    collision = isCollision(asteroidX,asteroidY,beamX,beamY)
+    if collision:
+        beamY = 480
+        beam_state = "ready"
+        score += 1
+        print(score)
+        asteroidX = random.randint(0,735)
+        asteroidY = random.randint(50, 50)
 
     player(playerX, playerY)
     astroid(asteroidX, asteroidY)
     pygame.display.update()
-
