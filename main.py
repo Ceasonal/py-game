@@ -9,11 +9,11 @@ screen = pygame.display.set_mode((800, 600))
 
 # Title & Icon
 pygame.display.set_caption("Asteroid Defense")
-icon = pygame.image.load("gameimg/spaceship.png")
+icon = pygame.image.load("gameimg/shipIcon.png")
 pygame.display.set_icon(icon)
 
 # Player
-playerImg = pygame.image.load("gameimg/shipmain.png")
+playerImg = pygame.image.load("gameimg/shipMain.png")
 playerX = 370
 playerY = 480
 playerX_change = 0
@@ -78,4 +78,3 @@ while running:
     astroid(asteroidX, asteroidY)
     pygame.display.update()
 
-print("hi")
