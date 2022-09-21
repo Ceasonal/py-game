@@ -37,7 +37,7 @@ for i in range(num_of_enemies):
     asteroidX_change.append(4)
     asteroidY_change.append(40)
 
-# beams
+# Beams
 # Ready - cant see beam on screen
 # Fire - beam is moving
 beamImg = pygame.image.load("gameimg/testbeam.png")
@@ -56,13 +56,17 @@ textY = 10
 # Game over text
 game_over_font = pygame.font.Font('freesansbold.ttf', 64)
 
-
+gameover = False
 def scoreboard(x,y):
     score = font.render("Score: "+ str(score_value), True, (255, 255, 255))
     screen.blit(score, (x, y))
-def game_over_text():
+def game_over():
+    global gameover
     over_text= font.render("GAME OVER", True, (255, 255, 255))
     screen.blit(over_text, (310, 250))
+    restart_text = font.render("PRESS BACKSPACE TO RESTART", True, (255, 255, 255))
+    screen.blit(restart_text, (150, 300))
+    gameover = True
 def player(x, y):
     screen.blit(playerImg, (x, y))
 def asteroid(x, y, i):
@@ -75,8 +79,6 @@ def isCollision(asteroidX, asteroidY, beamX, beamY):
     distance = math.sqrt((math.pow(asteroidX - beamX, 2)) + (math.pow(asteroidY - beamY, 2)))
     if distance < 27:  # distance b/w beam and asteroid
         return True
-    else:
-        False
 
 
 # Game Loop
@@ -105,12 +107,30 @@ while running:
                 if beam_state == "ready":
                     beamX = playerX
                     fire_beam(beamX, beamY)
+                    fire_beam(playerX, beamY)
+            if event.key == pygame.K_SPACE and gameover:
+                print("back is pressed")
+                asteroidImg = []
+                enemyX = []
+                asteroidX = []
+                asteroidY = []
+                asteroidX_change = []
+                asteroidY_change = []
+                num_of_enemies = 6
+                for i in range(num_of_enemies):
+                    asteroidImg.append(pygame.image.load("gameimg/asteroid.png"))
+                    asteroidX.append(random.randint(0, 735))
+                    asteroidY.append(random.randint(50, 50))
+                    asteroidX_change.append(4)
+                    asteroidY_change.append(40)
+                score_value = 0
+                gameover = False
 
-                fire_beam(playerX, beamY)
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                playerX_change = 0
-                # print("Keystore has been released")
+
+        # If event.type == pygame.KEYUP:
+        #     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+        #         playerX_change = 0
+        #         # print("Keystore has been released")
 
     playerX += playerX_change  # move player position
     if playerX <= 0:  # create/set boundaries
@@ -121,12 +141,11 @@ while running:
     # Asteroid movement
     asteroidX += asteroidX_change
     for i in range(num_of_enemies):
-
         # Game Over
-        if asteroidY[i] > 450:
+        if asteroidY[i] > 100:
             for j in range(num_of_enemies):
                 asteroidY[j] = 2000
-            game_over_text()
+            game_over()
             break
 
         asteroidX[i] += asteroidX_change[i]
