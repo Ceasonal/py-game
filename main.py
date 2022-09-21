@@ -108,7 +108,8 @@ while running:
                     beamX = playerX
                     fire_beam(beamX, beamY)
                     fire_beam(playerX, beamY)
-            if event.key == pygame.K_SPACE and gameover:
+            # Restart game
+            if event.key == pygame.K_BACKSPACE and gameover:
                 print("back is pressed")
                 asteroidImg = []
                 enemyX = []
