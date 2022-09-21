@@ -21,6 +21,7 @@ playerImg = pygame.image.load("gameimg/shipMain.png")
 playerX = 370
 playerY = 480
 playerX_change = 0
+playerY_change = 0
 
 # Asteroids
 asteroidImg = []
@@ -48,7 +49,10 @@ beamY_change = 10
 beam_state = "ready"
 
 score_value = 0
-font = pygame.font.Font('freesansbold.ttf', 32)
+prev_score = 0
+highest_score = 0
+
+font = pygame.font.Font('freesansbold.ttf', 20)
 
 textX = 10
 textY = 10
@@ -57,24 +61,40 @@ textY = 10
 game_over_font = pygame.font.Font('freesansbold.ttf', 64)
 
 gameover = False
-def scoreboard(x,y):
-    score = font.render("Score: "+ str(score_value), True, (255, 255, 255))
-    screen.blit(score, (x, y))
+
+
+def scoreboard(x, y):
+    display_score = font.render("Score: " + str(score_value), True, (255, 255, 255))
+    screen.blit(display_score, (x, y))
+    display_previous_score = font.render("Previous Score: " + str(prev_score), True, (255, 255, 255))
+    screen.blit(display_previous_score, (300, y))
+    display_high_score = font.render("High Score: " + str(highest_score), True, (255, 255, 255))
+    screen.blit(display_high_score, (600, y))
+
+
 def game_over():
     global gameover
-    over_text= font.render("GAME OVER", True, (255, 255, 255))
-    screen.blit(over_text, (310, 250))
+    over_text = font.render("GAME OVER", True, (255, 255, 255))
+    screen.blit(over_text, (350, 250))
     restart_text = font.render("PRESS BACKSPACE TO RESTART", True, (255, 255, 255))
-    screen.blit(restart_text, (150, 300))
+    screen.blit(restart_text, (240, 300))
     gameover = True
+
+
 def player(x, y):
     screen.blit(playerImg, (x, y))
+
+
 def asteroid(x, y, i):
     screen.blit(asteroidImg[i], (x, y))
+
+
 def fire_beam(x, y):
     global beam_state
     beam_state = "fire"
     screen.blit(beamImg, (x + 16, y + 10))
+
+
 def isCollision(asteroidX, asteroidY, beamX, beamY):
     distance = math.sqrt((math.pow(asteroidX - beamX, 2)) + (math.pow(asteroidY - beamY, 2)))
     if distance < 27:  # distance b/w beam and asteroid
@@ -124,9 +144,11 @@ while running:
                     asteroidY.append(random.randint(50, 50))
                     asteroidX_change.append(4)
                     asteroidY_change.append(40)
+                prev_score = score_value
+                if score_value > highest_score:
+                    highest_score = score_value
                 score_value = 0
                 gameover = False
-
 
         # If event.type == pygame.KEYUP:
         #     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -143,7 +165,7 @@ while running:
     asteroidX += asteroidX_change
     for i in range(num_of_enemies):
         # Game Over
-        if asteroidY[i] > 100:
+        if asteroidY[i] > 400:
             for j in range(num_of_enemies):
                 asteroidY[j] = 2000
             game_over()
@@ -169,7 +191,6 @@ while running:
 
         asteroid(asteroidX[i], asteroidY[i], i)
 
-
     # Beam movement
     if beamY <= 0:
         beamY = 480
@@ -179,7 +200,6 @@ while running:
         fire_beam(beamX, beamY)
         beamY -= beamY_change
 
-
     player(playerX, playerY)
-    scoreboard(textX,textY)
+    scoreboard(textX, textY)
     pygame.display.update()
