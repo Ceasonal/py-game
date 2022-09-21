@@ -30,13 +30,13 @@ asteroidX = []
 asteroidY = []
 asteroidX_change = []
 asteroidY_change = []
-num_of_enemies = 6
+num_of_enemies = 10
 for i in range(num_of_enemies):
     asteroidImg.append(pygame.image.load("gameimg/asteroid.png"))
     asteroidX.append(random.randint(0, 735))
     asteroidY.append(random.randint(50, 50))
-    asteroidX_change.append(4)
-    asteroidY_change.append(40)
+    asteroidX_change.append(5)
+    asteroidY_change.append(50)
 
 # Beams
 # Ready - cant see beam on screen
@@ -137,7 +137,7 @@ while running:
                 asteroidY = []
                 asteroidX_change = []
                 asteroidY_change = []
-                num_of_enemies = 6
+                num_of_enemies = 10
                 for i in range(num_of_enemies):
                     asteroidImg.append(pygame.image.load("gameimg/asteroid.png"))
                     asteroidX.append(random.randint(0, 735))
@@ -149,11 +149,10 @@ while running:
                     highest_score = score_value
                 score_value = 0
                 gameover = False
-
-        # If event.type == pygame.KEYUP:
-        #     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-        #         playerX_change = 0
-        #         # print("Keystore has been released")
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                playerX_change = 0
+                # print("Keystore has been released")
 
     playerX += playerX_change  # move player position
     if playerX <= 0:  # create/set boundaries
