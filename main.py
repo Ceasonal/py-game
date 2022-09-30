@@ -71,7 +71,6 @@ def scoreboard(x, y):
     display_high_score = font.render("High Score: " + str(highest_score), True, (255, 255, 255))
     screen.blit(display_high_score, (600, y))
 
-
 def game_over():
     global gameover
     over_text = font.render("GAME OVER", True, (255, 255, 255))
@@ -80,14 +79,11 @@ def game_over():
     screen.blit(restart_text, (240, 300))
     gameover = True
 
-
 def player(x, y):
     screen.blit(playerImg, (x, y))
 
-
 def asteroid(x, y, i):
     screen.blit(asteroidImg[i], (x, y))
-
 
 def fire_beam(x, y):
     global beam_state
@@ -108,26 +104,25 @@ while running:
     screen.fill((0, 0, 0))
     # Background Image
     screen.blit(background, (0, 0))
-    # playerX += 0.1 #makes img move right auto
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-        # if keystroke is pressed check whether its right or left
         if event.type == pygame.KEYDOWN:
-            # print("A keystore is pressed")#if any other keystore is pressed
+
             if event.key == pygame.K_LEFT:
                 playerX_change = -5
-                # print("Left arrow is pressed")
+
             if event.key == pygame.K_RIGHT:
                 playerX_change = 5
-                # print("Right arrow is pressed")
+
             if event.key == pygame.K_SPACE:
                 if beam_state == "ready":
                     beamX = playerX
                     fire_beam(beamX, beamY)
                     fire_beam(playerX, beamY)
+
             # Restart game
             if event.key == pygame.K_BACKSPACE and gameover:
                 print("back is pressed")
@@ -152,7 +147,6 @@ while running:
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
-                # print("Keystore has been released")
 
     playerX += playerX_change  # move player position
     if playerX <= 0:  # create/set boundaries
